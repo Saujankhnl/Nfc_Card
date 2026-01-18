@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ card.name }} | NFC Profile</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .page-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .nfc-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 380px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        padding: 30px 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .auth-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    .auth-btn a {
+        padding: 6px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .logout-btn {
+        background: #e74c3c;
+        color: #fff;
+    }
+
+    .logout-btn:hover {
+        background: #c0392b;
+    }
+
+    .login-btn {
+        background: #fff;
+        color: #667eea;
+    }
+
+    .login-btn:hover {
+        background: #f0f0f0;
+    }
+
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .profile-name {
+        margin-top: 15px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .profile-subtitle {
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .info-section {
+        padding: 25px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #333;
+        transition: background 0.3s;
+        margin-bottom: 10px;
+    }
+
+    .info-item:hover {
+        background: #f5f5f5;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .icon-email { background: #e8eaf6; }
+    .icon-phone { background: #e8f5e9; }
+    .icon-address { background: #fce4ec; }
+
+    .info-text {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .social-section {
+        padding: 0 25px 25px;
+        text-align: center;
+    }
+
+    .social-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .social-btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        transition: opacity 0.3s;
+    }
+
+    .social-btn:hover {
+        opacity: 0.85;
+    }
+
+    .btn-facebook { background: #1877f2; }
+    .btn-linkedin { background: #0a66c2; }
+    .btn-whatsapp { background: #25d366; }
+
+    .action-section {
+        padding: 0 25px 20px;
+    }
+
+    .save-contact-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: opacity 0.3s;
+    }
+
+    .save-contact-btn:hover {
+        opacity: 0.9;
+    }
+
+    .edit-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #2d3748;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 10px;
+        transition: background 0.3s;
+    }
+
+    .edit-btn:hover {
+        background: #1a202c;
+    }
+
+    .card-footer {
+        background: #f7f7f7;
+        text-align: center;
+        padding: 15px;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .nfc-url-section {
+        padding: 20px 25px;
+        background: #f0f4ff;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .nfc-url-section h4 {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .nfc-instruction {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .nfc-url-box {
+        display: flex;
+        gap: 10px;
+    }
+
+    .nfc-url-box input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 12px;
+        background: #fff;
+    }
+
+    .copy-btn {
+        padding: 10px 15px;
+        background: #667eea;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    .copy-btn:hover {
+        background: #5a6fd6;
+    }
+
+    .nfc-hint {
+        font-size: 11px;
+        color: #888;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="nfc-card">
+
+        <!-- Header -->
+        <div class="card-header">
+            <div class="auth-btn">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'accounts:logout' %}" class="logout-btn">Logout</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="login-btn">Login</a>
+                {% endif %}
+            </div>
+
+            {% if card.photo %}
+                <img src="{{ card.photo.url }}" alt="{{ card.name }}" class="profile-photo">
+            {% else %}
+                <img src="https://via.placeholder.com/120" alt="Profile" class="profile-photo">
+            {% endif %}
+
+            <h2 class="profile-name">{{ card.name }}</h2>
+            <p class="profile-subtitle">Digital NFC Profile</p>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <a href="mailto:{{ card.email }}" class="info-item">
+                <span class="info-icon icon-email">📧</span>
+                <span class="info-text">{{ card.email }}</span>
+            </a>
+
+            <a href="tel:{{ card.phone_number }}" class="info-item">
+                <span class="info-icon icon-phone">📞</span>
+                <span class="info-text">{{ card.phone_number }}</span>
+            </a>
+
+            <div class="info-item">
+                <span class="info-icon icon-address">📍</span>
+                <span class="info-text">{{ card.address }}</span>
+            </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="social-section">
+            <h3 class="social-title">Connect With Me</h3>
+            <div class="social-links">
+                {% if card.facebook %}
+                    <a href="{{ card.facebook }}" target="_blank" class="social-btn btn-facebook">Facebook</a>
+                {% endif %}
+
+                {% if card.linkedin %}
+                    <a href="{{ card.linkedin }}" target="_blank" class="social-btn btn-linkedin">LinkedIn</a>
+                {% endif %}
+
+                {% if card.whatsapp %}
+                    <a href="{{ card.whatsapp }}" target="_blank" class="social-btn btn-whatsapp">WhatsApp</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-section">
+            <a href="{% url 'cards:download_vcf' %}" class="save-contact-btn">📥 Save Contact</a>
+
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'cards:edit_card' card.uid %}" class="edit-btn">✏️ Edit Profile</a>
+            {% endif %}
+        </div>
+
+        <!-- NFC URL Section (only for card owner) -->
+        {% if request.user.is_authenticated %}
+        <div class="nfc-url-section">
+            <h4>Your NFC Card URL</h4>
+            <p class="nfc-instruction">Program this URL into your NFC card:</p>
+            <div class="nfc-url-box">
+                <input type="text" id="nfc-url" value="{{ request.scheme }}://{{ request.get_host }}/cards/p/{{ card.uid }}/" readonly>
+                <button onclick="copyUrl()" class="copy-btn">📋 Copy</button>
+            </div>
+            <p class="nfc-hint">When someone taps your NFC card, they'll see your profile!</p>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="card-footer">
+            Tap NFC Card to Share Profile
+        </div>
+
+    </div>
+</div>
+
+<script>
+function copyUrl() {
+    var urlInput = document.getElementById("nfc-url");
+    urlInput.select();
+    document.execCommand("copy");
+    alert("URL copied! Program this into your NFC card.");
+}
+</script>
+{% endblock %}

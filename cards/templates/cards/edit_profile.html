@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Edit Profile</title>{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .form-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+        font-size: 24px;
+    }
+
+    .form-container p {
+        margin-bottom: 15px;
+    }
+
+    .form-container label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+        color: #444;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        outline: none;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+    .form-container input:focus,
+    .form-container textarea:focus {
+        border-color: #667eea;
+    }
+
+    .form-container input[type="file"] {
+        padding: 8px;
+        background: #f9f9f9;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: opacity 0.3s;
+    }
+
+    .submit-btn:hover {
+        opacity: 0.9;
+    }
+
+    .cancel-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: #667eea;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .cancel-link:hover {
+        text-decoration: underline;
+    }
+
+    .helptext {
+        font-size: 12px;
+        color: #888;
+        margin-top: 3px;
+    }
+
+    .errorlist {
+        color: #e74c3c;
+        font-size: 13px;
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0 0;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Edit NFC Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="submit-btn">Update Profile</button>
+        <a href="{% url 'cards:profile' %}" class="cancel-link">Cancel</a>
+    </form>
+</div>
+{% endblock %}
